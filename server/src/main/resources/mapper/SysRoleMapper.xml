@@ -11,7 +11,7 @@
         <result property="updated" column="updated" jdbcType="TIMESTAMP" />
     </resultMap>
 
-    <select id="getRolesByUserId" resultType="SysRole">
+    <select id="getRolesByUserId" resultType="com.ss.entity.SysRole">
         SELECT r.rname,r.rval FROM sys_role r, sys_user_role ur
         WHERE r.rid = ur.role_id AND ur.user_id = #{userId}
     </select>
