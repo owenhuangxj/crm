@@ -55,8 +55,8 @@
       }
       return {
         loginForm: {
-          username: '',//此处的用户名和密码会显示到登录页面
-          password: ''
+          username: 'owen',//此处的用户名和密码会显示到登录页面
+          password: 'huangsir'
         },
         loginRules: {
           username: [{required: true, trigger: 'blur', validator: validateUsername}],
