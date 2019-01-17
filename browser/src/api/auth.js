@@ -5,7 +5,7 @@ import request from '@/utils/request'
 
 export default {
 
-  loginByUsername(username, password) {
+  doLogin(username, password) {
     const data = {
       uname: username,
       pwd: password

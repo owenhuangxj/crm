@@ -48,7 +48,6 @@ export default {
       data
     })
   },
-
   /**
    * 更新用户的角色
    * @param perm
@@ -60,6 +59,4 @@ export default {
       data
     })
   }
-
 }
-

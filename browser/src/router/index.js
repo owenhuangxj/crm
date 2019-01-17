@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-const _import = require('./_import_' + process.env.NODE_ENV)
+const _import = require('./_import_' + process.env.NODE_ENV) //生产环境就是_import_production 即是 import('@/views/' + file + '.vue')
 // in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
 // detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
-
+// 模块化工程中必须要通过 Vue.use() 明确地安装路由功能
 Vue.use(Router)
 
 /* Layout */
@@ -56,7 +56,7 @@ export const asyncRouterMap = [
   {
     path: '/system',
     component: Layout,
-    meta: { perm:'m:sys', title: '系统', icon: 'chart' },
+    meta: { perm:'m:sys', title: '系统设置', icon: 'chart' },
     children: [
       {
         path: 'user_manage',
@@ -86,7 +86,7 @@ export const asyncRouterMap = [
       },
     ]
   },
-  {
+  /*{
     path: '/menu1',
     component: Layout,
     children: [{
@@ -96,36 +96,36 @@ export const asyncRouterMap = [
       meta: { perm:'m:menu1', title: '菜单1', icon: 'icon' }
     }]
   },
-
+*/
 
   {
-    path: '/menu2',
+    path: '/log',
     component: Layout,
     children: [{
       path: 'index',
-      name: 'menu2',
-      component: _import('menu/menu2'),
-      meta: { perm:'m:menu2', title: '菜单2', icon: 'icon' }
+      name: 'log',
+      component: _import('menu/log'),
+      meta: { perm:'m:log', title: '系统日志', icon: 'icon' }
     }]
   },
 
   {
-    path: '/menu3',
+    path: '/student',
     component: Layout,
     meta: {
-      perm:'m:menu3',
-      title: '菜单3',
+      perm:'m:student',
+      title: '学员管理',
       icon: 'chart'
     },
     children: [
-      { path: 'menu3_1', component: _import('menu/menu3_1'), name: 'menu3_1', meta: { perm:'m:menu3:1', title: '菜单3-1', icon: 'chart', noCache: true }},
-      { path: 'menu3_2', component: _import('menu/menu3_2'), name: 'menu3_2', meta: { perm:'m:menu3:2', title: '菜单3-2', icon: 'chart', noCache: true }},
-      { path: 'menu3_3', component: _import('menu/menu3_3'), name: 'menu3_3', meta: { perm:'m:menu3:3', title: '菜单3-3', icon: 'chart', noCache: true }}
+      { path: 'trace', component: _import('menu/student/trace'), name: 'trace', meta: { perm:'m:student:trace', title: '学员跟踪', icon: 'chart', noCache: true }},
+      { path: 'resume_dispatcher', component: _import('menu/student/resume_dispatcher'), name: '简历分配', meta: { perm:'m:student:resume_dispatcher', title: '简历分配', icon: 'chart', noCache: true }},
+      { path: 'menu3_3', component: _import('menu/student/timer'), name: 'timer', meta: { perm:'m:student:timer', title: '定时任务', icon: 'chart', noCache: true }}
     ]
   },
 
 
-  {
+  /*{
     path: '/menu4',
     name: 'menu4',
     component: Layout,
@@ -154,7 +154,7 @@ export const asyncRouterMap = [
       },
       { path: 'menu4/menu4_2', name: 'menu4_2', icon: 'tab', component: _import('menu/menu4_2/index'), meta: {perm:'m:menu4:2', title: '菜单4-2' }}
     ]
-  },
+  },*/
 
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -24,7 +24,6 @@ export default{
 
   /**
    * 根据输入的路由表过滤出一个需要进行权限控制的路由表
-   * @param routeArr
    */
   filterPermControlRouter(routeArr) {
     const routes = routeArr.filter(route => {
@@ -38,7 +37,6 @@ export default{
     })
     return routes
   },
-
 
   /**
    * 根据输入的路由表，生成菜单权限树
@@ -86,9 +84,7 @@ export default{
         }
       }
       return perm;
-
     })
   },
-
 
 }

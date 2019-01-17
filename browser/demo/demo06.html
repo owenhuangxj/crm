@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>watch</title>
+</head>
+<body>
+  <div id="app">
+    <input v-model="firstName" placeholder="firstname"/>
+    <br/>
+    <input v-model="lastName" placeholder="lastname"/>
+    <br/>
+    {{fullName}}
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    new Vue({
+      el : '#app',
+      data:{
+        firstName : 'Bar',
+        lastName : 'Foo',
+        fullName : 'Bar Foo'
+      },
+      watch:{
+        firstName:function(val) {this.fullName = this.lastName + ' ' + val},
+        lastName:function(val){ this.fullName = val + ' ' + this.firstName}
+      }
+    })
+  </script>
+</body>
+</html>

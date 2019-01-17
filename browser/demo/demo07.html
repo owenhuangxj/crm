@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>router01</title>
+</head>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<body>
+  <div id="app">
+    <h2>Hello App</h2>
+    <p>
+      <!--使用router-link导航，由to属性指明路由链接，<router-link>会被渲染成一个<a>标签-->
+      <router-link to="foo">Go to foo</router-link>
+      <router-link to="bar">Go to bar</router-link>
+    </p>
+    <!--路由出口，路由的组件将会被渲染在这里-->
+    <router-view></router-view>
+  </div>
+
+  <script>
+    const foo = {template:'<div>foo</div>'}
+    const bar = {template:'<div>bar</div>'}
+    const routes = [
+      {path:'/foo',component:foo},
+      {path:'/bar',component:bar}
+    ]
+    const router = new VueRouter({
+      routes //相当于写routes:routes
+    })
+    var app = new Vue({
+      router
+    }).$mount('#app')
+  </script>
+
+</body>
+</html>

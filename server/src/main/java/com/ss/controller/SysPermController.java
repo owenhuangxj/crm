@@ -34,7 +34,7 @@ public class SysPermController {
 
     @Autowired
     private SysPermService permService;
-
+    // 获取所有权限数据
     @GetMapping("/list/all")
     public Json listAllPermission() {
         String oper = "list menu,button,api permissions";
@@ -150,7 +150,6 @@ public class SysPermController {
         return Json.result(oper, success).data("updated", perm.getUpdated());
     }
 
-
     @Autowired
     private ApplicationContext context;
 
@@ -174,9 +173,6 @@ public class SysPermController {
 
     /**
      * 获取控制器上的方法上的注释，生成后台接口权限的信息
-     *
-     * @param clz
-     * @return
      */
     private List<SysPerm> getApiPerm(Class<?> clz,final String parentPval) {
         //获取clz类上有RequiresPermissions注解的所有方法
@@ -206,9 +202,6 @@ public class SysPermController {
 
     /**
      * 获取控制器上的注释，生成后台接口模块权限的信息
-     *
-     * @param clz
-     * @return
      */
     public SysPerm getModulePerm(Class<?> clz) {
         SysPerm perm = new SysPerm();
@@ -258,6 +251,4 @@ public class SysPermController {
         perm.setPtype(PermType.API);
         return perm;
     }
-
-
 }

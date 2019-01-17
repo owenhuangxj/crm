@@ -20,8 +20,6 @@
           <el-tag style="margin-right: 5px;" type="danger" v-if="perms.length==0">未配置任何权限</el-tag>
           <el-tag style="margin-right: 5px;" type="info" v-else v-for="r in perms" :key="r.val">{{r.name}}</el-tag>
         </div>
-
-
       </div>
     </div>
   </div>

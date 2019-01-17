@@ -8,7 +8,7 @@ import Code from '@/utils/code'
 const service = axios.create({
   baseURL: process.env.BASE_API, // api的base_url
   timeout: 5000, // request timeout
-  withCredentials: true //使前台能够保存cookie
+  withCredentials: true // 使前台能够保存cookie
 })
 
 // request interceptor

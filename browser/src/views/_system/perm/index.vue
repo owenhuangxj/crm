@@ -159,16 +159,14 @@
         btnPermMap:{},//按parent字段分组的map
 
         menuPermissionTree: [],//菜单权限树
-        buttonPermissionTree: [],//菜单权限树
-        apiPermissionTree: [],//菜单权限树
+        buttonPermissionTree: [],//按钮权限树
+        apiPermissionTree: [],//API权限树
 
         filterMenuPermText: '',
         filterButtonPermText: '',
         filterApiPermText: '',
 
         permType,
-
-
 
         treeProps: {
           label: 'pname',
@@ -219,6 +217,7 @@
       //获取后台权限数据
       initData() {
         permApi.listAllPermissions().then(res => {
+          console.log(res);
           //按parent分组的按钮权限
           this.btnPermMap = res.data.btnPermMap || {}
           //含有所有权限map，key是ptype
@@ -323,21 +322,7 @@
       },
 
 
-
-
-
-
-
       ////////////////普通用户修改密码的页面和接口！！！！
-
-
-
-
-
-
-
-
-
 
       /**
        * 同步菜单权限数据

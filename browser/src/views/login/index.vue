@@ -79,9 +79,17 @@
         this.$refs.loginForm.validate(valid => {
           if (valid) {
             this.loading = true
-            this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+            this.$store.dispatch('loginAction', this.loginForm).then(() => {
               this.loading = false
-              this.$router.push({path: '/'})
+              /*
+              * // 字符串 router.push('home')
+              * // 对象 router.push({ path: 'home' })
+              * // 命名的路由 router.push({ name: 'user', params: { userId: '123' }})
+              * // 带查询参数，变成 /register?plan=private
+              * router.push({ path: 'register', query: { plan: 'private' }})
+              *
+              * */
+              this.$router.push({path: '/'}) //对象方式的编程式路由
             }).catch(() => {
               this.loading = false
             })

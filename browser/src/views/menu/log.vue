@@ -1,15 +1,15 @@
 <template>
 <div class="login-container">
     <h1>{{pageName}}</h1>
-  </div>
+</div>
 </template>
 
 <script>
   export default {
-    name: 'Menu2',
+    name: 'log',
     data() {
       return {
-        pageName: '菜单2'
+        pageName: '日志管理'
       }
     }
   }
