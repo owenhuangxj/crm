@@ -86,17 +86,6 @@ export const asyncRouterMap = [
       },
     ]
   },
-  /*{
-    path: '/menu1',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'menu1',
-      component: _import('menu/menu1'),
-      meta: { perm:'m:menu1', title: '菜单1', icon: 'icon' }
-    }]
-  },
-*/
 
   {
     path: '/log',
@@ -108,7 +97,16 @@ export const asyncRouterMap = [
       meta: { perm:'m:log', title: '系统日志', icon: 'icon' }
     }]
   },
-
+  {
+    path: '/performance',
+    component: Layout,
+    children: [{
+      path: 'index',
+      name: 'performance',
+      component: _import('menu/performance'),
+      meta: { perm:'m:performance', title: '业绩管理', icon: 'icon' }
+    }]
+  },
   {
     path: '/student',
     component: Layout,
@@ -123,38 +121,6 @@ export const asyncRouterMap = [
       { path: 'menu3_3', component: _import('menu/student/timer'), name: 'timer', meta: { perm:'m:student:timer', title: '定时任务', icon: 'chart', noCache: true }}
     ]
   },
-
-
-  /*{
-    path: '/menu4',
-    name: 'menu4',
-    component: Layout,
-    redirect: '/menu4/menu4_1/a',
-    meta: {
-      perm:'m:menu4',
-      title: '菜单4',
-      icon: 'example'
-    },
-    children: [
-      {
-        path: '/menu4/menu4_1',
-        name: 'menu4_1',
-        component: _import('menu/menu4_1/index'),
-        redirect: '/menu4/menu4_1/a',
-        meta: {
-          perm:'m:menu4:1',
-          title: '菜单4-1',
-          icon: 'table'
-        },
-        children: [
-          { path: 'a', name: 'menu4_1_a', component: _import('menu/menu4_1/a'), meta: { perm:'m:menu4:1:a', title: '菜单4-1-a' }},
-          { path: 'b', name: 'menu4_1_b', component: _import('menu/menu4_1/b'), meta: { perm:'m:menu4:1:b', title: '菜单4-1-b' }},
-          { path: 'c', name: 'menu4_1_c', component: _import('menu/menu4_1/c'), meta: { perm:'m:menu4:1:c', title: '菜单4-1-c' }}
-        ]
-      },
-      { path: 'menu4/menu4_2', name: 'menu4_2', icon: 'tab', component: _import('menu/menu4_2/index'), meta: {perm:'m:menu4:2', title: '菜单4-2' }}
-    ]
-  },*/
 
   { path: '*', redirect: '/404', hidden: true }
 ]

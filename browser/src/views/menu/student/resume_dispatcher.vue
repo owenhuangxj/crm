@@ -6,10 +6,10 @@
 
 <script>
   export default {
-    name: 'Menu3_2',
+    name: 'resume_dispatcher',
     data() {
       return {
-        pageName: '菜单3-2'
+        pageName: '简历分配'
       }
     }
   }

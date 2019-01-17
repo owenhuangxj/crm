@@ -6,10 +6,10 @@
 
 <script>
   export default {
-    name: 'Menu4_1_b',
+    name: 'performance',
     data() {
       return {
-        pageName: '菜单4-1-b'
+        pageName: '业绩'
       }
     }
   }

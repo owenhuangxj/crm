@@ -6,10 +6,10 @@
 
 <script>
   export default {
-    name: 'Menu3_3',
+    name: 'timer',
     data() {
       return {
-        pageName: '菜单3-3'
+        pageName: '定时任务'
       }
     }
   }
