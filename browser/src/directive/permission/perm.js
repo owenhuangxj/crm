@@ -1,6 +1,5 @@
 /** 权限指令 */
 import hasPerm from './hasPerm'
-
 export default {
   bind: function (el,binding) {
     if(el && binding.value){

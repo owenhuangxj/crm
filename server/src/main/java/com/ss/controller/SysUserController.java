@@ -1,5 +1,7 @@
 package com.ss.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ss.annotation.PermInfo;
 import com.ss.constant.Root;
 import com.ss.entity.SysUser;
@@ -11,8 +13,6 @@ import com.ss.util.PageUtils;
 import com.ss.vo.Json;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.plugins.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -33,9 +33,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/sys_user")
 public class SysUserController {
-
     private static final Logger log = LoggerFactory.getLogger(SysUserController.class);
-
     @Autowired
     private SysUserService sysUserService;
     @Autowired
@@ -60,7 +58,7 @@ public class SysUserController {
             return Json.fail(oper, "密码不能为空");
         }
 
-        SysUser userDB = sysUserService.selectOne(new EntityWrapper<SysUser>().eq("uname", user.getUname()));
+        SysUser userDB = sysUserService.getOne(new QueryWrapper<SysUser>().eq("uname", user.getUname()));
         if (userDB != null) {
             return Json.fail(oper, "用户已注册");
         }
@@ -74,7 +72,7 @@ public class SysUserController {
         user.setSalt(salt);
         user.setCreated(new Date());
 
-        boolean success = sysUserService.insert(user);
+        boolean success = sysUserService.save(user);
         return Json.result(oper, success)
                 .data("uid",user.getUid())
                 .data("created",user.getCreated());
@@ -106,8 +104,8 @@ public class SysUserController {
             return Json.fail(oper,"不能删除管理员用户");
         }
 
-        boolean success = sysUserService.deleteById(uid);
-        sysUserRoleService.delete(new EntityWrapper<SysUserRole>().eq("user_id",uid));
+        boolean success = sysUserService.removeById(uid);
+        sysUserRoleService.remove(new QueryWrapper<SysUserRole>().eq("user_id",uid));
         return Json.result(oper, success);
     }
 
@@ -131,14 +129,14 @@ public class SysUserController {
         }
 
         //删除：原来绑定的角色
-        boolean deleteSucc = sysUserRoleService.delete(new EntityWrapper<SysUserRole>().eq("user_id", uid));
+        boolean deleteSucc = sysUserRoleService.remove(new QueryWrapper<SysUserRole>().eq("user_id", uid));
         if (!deleteSucc) return Json.fail(oper, "无法解除原来的用户-角色关系");
 
         //更新：绑定新的角色
         List<SysUserRole> list = rids.stream().map(roleId -> new SysUserRole(uid, roleId)).collect(Collectors.toList());
 
         if (!rids.isEmpty()){
-            boolean addSucc = sysUserRoleService.insertBatch(list);
+            boolean addSucc = sysUserRoleService.saveBatch(list);
             return Json.result(oper, addSucc);
         }
         return Json.succ(oper);
@@ -192,7 +190,7 @@ public class SysUserController {
         user.setCreated(null);
         user.setUpdated(new Date());
 
-        //boolean success = sysUserService.update(user,new EntityWrapper<User>().eq("uid",user.getUid()));
+        //boolean success = sysUserService.update(user,new QueryWrapper<User>().eq("uid",user.getUid()));
         boolean success = sysUserService.updateById(user);
 
         return Json.result(oper, success).data("updated",user.getUpdated());
@@ -237,5 +235,4 @@ public class SysUserController {
         List<String> rids = sysRoleService.getRoleIdsByUserId(uid);
         return Json.succ(oper,"rids",rids);
     }
-
 }

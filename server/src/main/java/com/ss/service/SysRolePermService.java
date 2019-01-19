@@ -1,7 +1,7 @@
 package com.ss.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.ss.entity.SysRolePerm;
-import com.baomidou.mybatisplus.service.IService;
 
 public interface SysRolePermService extends IService<SysRolePerm> {
 }

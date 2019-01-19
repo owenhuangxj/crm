@@ -11,9 +11,14 @@
           {{nick}}
         </div>
         <div>
+          <!--有hack：errorLog.js:17 TypeError: _vm.checkPermission is not a function-->
+          <!--<el-tab-pane v-if="checkPermission(['root'])" >Admin can see this</el-tab-pane>-->
+          <el-tag v-permission="['root']">admin</el-tag>
+          <el-tag v-permission="['manager']">销售经理</el-tag>
+
           <span style="font-size:20px;padding-top:20px;display:inline-block;">角色：</span>
           <el-tag style="margin-right: 5px;" type="danger" v-if="roles.length==0" >游客（未配置任何角色）</el-tag>
-          <el-tag style="margin-right: 5px;" type="success" v-else v-for="r in roles" :key="r.val">{{r.name}}</el-tag>
+          <el-tag style="margin-right: 5px;" type="success" v-else v-for="r in roles" :key="r.val">{{r.val}}-{{r.name}}</el-tag>
         </div>
         <div>
           <span style="font-size:20px;padding-top:20px;display:inline-block;">权限：</span>
@@ -25,14 +30,17 @@
   </div>
 </template>
 
-
 <script>
   import { mapGetters } from 'vuex'
   import PanThumb from '@/components/PanThumb'
+  /*import checkPermission from '@/utils/permission' // 权限判断函数*/
+  // 当然你也可以为了方便使用，将它注册到全局
+  import permission from '@/directive/permission/index.js' // 权限判断指令
 
   export default {
     name: 'dashboard',
     components: { PanThumb },
+    directives: { permission },
     data() {
       return {
 
@@ -45,10 +53,14 @@
         'avatar',
         'roles',
         'perms'
-      ])
-    }
+      ]),
+    },
+    /*methods: {
+      checkPermission
+    }*/
   }
 </script>
+
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   .pan-info {

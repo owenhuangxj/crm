@@ -1,5 +1,9 @@
 package com.ss.controller;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ss.annotation.PermInfo;
 import com.ss.constant.PermType;
 import com.ss.entity.SysPerm;
@@ -13,9 +17,6 @@ import com.ss.vo.Json;
 import com.ss.vo.UpdateRolePermVo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -57,14 +58,14 @@ public class SysRoleController {
             return Json.fail(oper, "权限值不能为空");
         }
 
-        SysRole roleDB = roleService.selectOne(new EntityWrapper<SysRole>().eq("rval", role.getRval()));
+        SysRole roleDB = roleService.getOne(new QueryWrapper<SysRole>().eq("rval", role.getRval()));
         if (roleDB != null) {
             return Json.fail(oper, "角色值已存在：" + role.getRval());
         }
 
         //保存新用户数据
         role.setCreated(new Date());
-        boolean success = roleService.insert(role);
+        boolean success = roleService.save(role);
         return Json.result(oper, success)
                 .data("rid",role.getRid())
                 .data("created",role.getCreated());
@@ -83,7 +84,7 @@ public class SysRoleController {
             return Json.fail(oper, "无法删除角色：参数为空（角色id）");
         }
 
-        boolean success = roleService.deleteById(rid);
+        boolean success = roleService.removeById(rid);
         return Json.result(oper, success);
     }
 
@@ -101,13 +102,13 @@ public class SysRoleController {
         if (current == 0) current = 1;
         if (size == 0) size = 10;
 
-        Wrapper<SysRole> queryParams = new EntityWrapper<>();
-        queryParams.orderBy("created", false);
-        queryParams.orderBy("updated", false);
+        QueryWrapper<SysRole> queryParams = new QueryWrapper<>();
+        queryParams.orderByAsc(false,"created","updated");
         if (StringUtils.isNotBlank(rname)) {
-            queryParams.like("rname", rname);
+            queryParams.like("rname",rname);
         }
-        Page<SysRole> page = roleService.selectPage(new Page<>(current, size), queryParams);
+
+        IPage<SysRole> page = roleService.page(new Page<>(current, size), queryParams);
         return Json.succ(oper).data("page", page);
     }
 
@@ -142,13 +143,13 @@ public class SysRoleController {
         final Integer ptype = vo.getPtype();
         final List<String> pvals = vo.getPvals();
 
-        Wrapper<SysRolePerm> deleteRelationParam = new EntityWrapper<SysRolePerm>().eq("role_id", rid).eq("perm_type", ptype);
-        boolean deleteRelationSucc = rolePermService.delete(deleteRelationParam);
+        Wrapper<SysRolePerm> deleteRelationParam = new QueryWrapper<SysRolePerm>().eq("role_id", rid).eq("perm_type", ptype);
+        boolean deleteRelationSucc = rolePermService.remove(deleteRelationParam);
         if (!deleteRelationSucc) return Json.fail(oper, "无法解除原来的角色-权限关系");
 
         if (!pvals.isEmpty()){
             List<SysRolePerm> list = vo.getPvals().stream().map(pval -> new SysRolePerm(rid, pval,ptype)).collect(Collectors.toList());
-            boolean addSucc = rolePermService.insertBatch(list);
+            boolean addSucc = rolePermService.saveBatch(list);
             return Json.result(oper, addSucc);
         }
         return Json.succ(oper);
@@ -164,7 +165,7 @@ public class SysRoleController {
         Integer ptype = json.getInteger("ptype");
         String pval = json.getString("pval");
 
-        boolean success = rolePermService.insert(new SysRolePerm(rid, pval, ptype));
+        boolean success = rolePermService.save(new SysRolePerm(rid, pval, ptype));
         return Json.result(oper,success);
     }
 
@@ -178,11 +179,11 @@ public class SysRoleController {
         Integer ptype = json.getInteger("ptype");
         String pval = json.getString("pval");
 
-        Wrapper<SysRolePerm> deleteParam = new EntityWrapper<SysRolePerm>()
+        Wrapper<SysRolePerm> deleteParam = new QueryWrapper<SysRolePerm>()
                 .eq("role_id", rid)
                 .eq("perm_val", pval)
                 .eq("perm_type", ptype);
-        boolean success = rolePermService.delete(deleteParam);
+        boolean success = rolePermService.remove(deleteParam);
         return Json.succ(oper,success);
     }
 
@@ -194,7 +195,7 @@ public class SysRoleController {
         if (StringUtils.isBlank(rid)){
             return Json.fail(oper, "无法查询当前角色的权限值：参数为空（角色id）");
         }
-        SysRole role = roleService.selectById(rid);
+        SysRole role = roleService.getById(rid);
         List<SysPerm> perms = permService.getPermsByRoleId(rid);
         Map<Integer, List<SysPerm>> permMap = perms.stream().collect(Collectors.groupingBy(SysPerm::getPtype));
 

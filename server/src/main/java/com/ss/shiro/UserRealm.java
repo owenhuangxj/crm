@@ -1,12 +1,12 @@
 package com.ss.shiro;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ss.entity.SysUser;
 import com.ss.service.SysPermService;
 import com.ss.service.SysRoleService;
 import com.ss.service.SysUserService;
 import com.ss.vo.AuthVo;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -50,7 +50,6 @@ public class UserRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        //null usernames are invalid
         if (principals == null) {
             throw new AuthorizationException("PrincipalCollection method argument cannot be null.");
         }
@@ -76,7 +75,7 @@ public class UserRealm extends AuthorizingRealm {
             throw new AccountException("用户名不能为空");
         }
 
-        SysUser userDB = userService.selectOne(new EntityWrapper<SysUser>().eq("uname", username));
+        SysUser userDB = userService.getOne(new QueryWrapper<SysUser>().eq("uname", username));
         if (userDB == null) {
             throw new UnknownAccountException("找不到用户（"+username+"）的帐号信息");
         }

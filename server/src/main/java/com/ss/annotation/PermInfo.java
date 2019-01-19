@@ -6,7 +6,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface PermInfo {
-
     /**
      * 权限值
      */

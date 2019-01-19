@@ -18,8 +18,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-
-
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     //不满足@RequiresGuest注解时抛出的异常信息
@@ -52,6 +50,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public Json page403() {
         return new Json("Unauthorized", false, Codes.UNAUTHZ, "用户没有访问权限", null);
     }
-
 
 }

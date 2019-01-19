@@ -1,5 +1,6 @@
 package com.ss.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ss.annotation.PermInfo;
 import com.ss.constant.PermType;
 import com.ss.entity.SysPerm;
@@ -7,7 +8,6 @@ import com.ss.service.SysPermService;
 import com.ss.vo.Json;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -38,9 +38,10 @@ public class SysPermController {
     @GetMapping("/list/all")
     public Json listAllPermission() {
         String oper = "list menu,button,api permissions";
-        EntityWrapper<SysPerm> params = new EntityWrapper<>();
-        params.in("ptype", new Integer[]{PermType.MENU, PermType.BUTTON, PermType.API});
-        List<SysPerm> list = permService.selectList(params);
+
+        QueryWrapper<SysPerm> params = new QueryWrapper<>();
+        params.in("ptype", new Object[]{PermType.MENU, PermType.BUTTON, PermType.API});
+        List<SysPerm> list = permService.list(params);
         if (list.isEmpty()){
             return Json.succ(oper);
         }else{
@@ -57,9 +58,9 @@ public class SysPermController {
     @GetMapping("/list/btn_perm_map")
     public Json listButtonPermMapGroupByParent() {
         String oper = "list btn perm map group by parent";
-        EntityWrapper<SysPerm> params = new EntityWrapper<>();
+        QueryWrapper<SysPerm> params = new QueryWrapper<>();
         params.eq("ptype", PermType.BUTTON);
-        List<SysPerm> buttonPermList = permService.selectList(params);
+        List<SysPerm> buttonPermList = permService.list(params);
 
         Map<String, List<SysPerm>> buttonsGroupedByParent = new HashMap<>();
         if (buttonPermList!=null&&!buttonPermList.isEmpty()){
@@ -74,7 +75,7 @@ public class SysPermController {
         log.info("{}, body: {}", oper, body);
         List<SysPerm> notSyncedPerms = JSON.parseArray(body, SysPerm.class);
         if (!notSyncedPerms.isEmpty()){
-            permService.delete(new EntityWrapper<SysPerm>().eq("ptype",PermType.MENU));
+            permService.remove(new QueryWrapper<SysPerm>().eq("ptype",PermType.MENU));
             permService.saveOrUpdate(notSyncedPerms);
         }
         return Json.succ(oper);
@@ -86,7 +87,7 @@ public class SysPermController {
         log.info("{}, body: {}", oper, body);
         List<SysPerm> notSyncedPerms = JSON.parseArray(body, SysPerm.class);
         if (!notSyncedPerms.isEmpty()){
-            permService.delete(new EntityWrapper<SysPerm>().eq("ptype",PermType.API));
+            permService.remove(new QueryWrapper<SysPerm>().eq("ptype",PermType.API));
             permService.saveOrUpdate(notSyncedPerms);
         }
         return Json.succ(oper);
@@ -102,10 +103,9 @@ public class SysPermController {
             return Json.fail(oper, "权限值不能为空");
         }
 
-        EntityWrapper<SysPerm> params = new EntityWrapper<>();
-        params.eq("pval", perm.getPval());
-        params.setSqlSelect("pname,pval");
-        SysPerm permDB = permService.selectOne(params);
+        QueryWrapper<SysPerm> params = new QueryWrapper<>();
+        params.select("pname,pval").eq("pval", perm.getPval());
+        SysPerm permDB = permService.getOne(params);
 
         if (permDB != null) {
             return Json.fail(oper, "权限值已存在：" + permDB.getPname() + "（" + perm.getPval() + "）");
@@ -113,21 +113,21 @@ public class SysPermController {
 
         //保存
         perm.setCreated(new Date());
-        boolean success = permService.insert(perm);
+        boolean success = permService.save(perm);
         return Json.result(oper, success)
                 .data("created", perm.getCreated());
     }
 
     @DeleteMapping
-    public Json delete(@RequestBody String body) {
-        String oper = "delete permission";
+    public Json remove(@RequestBody String body) {
+        String oper = "remove permission";
         log.info("{}, body: {}", oper, body);
         JSONObject jsonObj = JSON.parseObject(body);
         String pval = jsonObj.getString("pval");
         if (StringUtils.isBlank(pval)) {
             return Json.fail(oper, "无法删除权限：参数为空（权限值）");
         }
-        boolean success = permService.deleteById(pval);
+        boolean success = permService.removeById(pval);
         return Json.result(oper, success);
     }
 

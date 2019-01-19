@@ -2,7 +2,7 @@
 buildscript {
     ext {
         springIOVersion = 'Cairo-RELEASE'
-        springBootVersion = '2.1.0.RELEASE'
+        springBootVersion = '2.1.2.RELEASE'
     }
     repositories {
         maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
@@ -15,9 +15,10 @@ buildscript {
 //应用插件
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'war' // 引用war插件，插件中提供了providedCompile依赖
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-
+//apply plugin: 'nebula.provided-base'
 //项目设置
 group 'com.ss'
 version '1.0'
@@ -30,27 +31,34 @@ compileTestJava.options.encoding = "UTF-8"
 
 //设置maven阿里云镜像
 repositories {
+    mavenCentral()
     maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
 }
-//项目依赖
+//plugins {
+//    id 'net.ltgt.apt' version '0.10'
+//}
 dependencies {
     //spring boot的starter
+    compile 'org.springframework.boot:spring-boot-starter'
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-aop'
     compile 'org.springframework.boot:spring-boot-devtools'
+    compile('net.sf.json-lib:json-lib:2.4:jdk15')
     testCompile 'org.springframework.boot:spring-boot-starter-test'
-
+    compile 'javax.mail:javax.mail-api:1.6.2'
+    compile 'org.apache.poi:poi:3.8'
+    compile 'org.apache.poi:poi-ooxml:3.8'
     //mysql及druid连接池
     compile 'mysql:mysql-connector-java'
     compile 'com.alibaba:druid-spring-boot-starter:1.1.9'
 
     //mybatis
-//    compile 'org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.2'
-    compile 'com.baomidou:mybatis-plus-boot-starter:2.2.0'
+    compile group: 'com.baomidou', name: 'mybatis-plus-boot-starter', version: '3.0.5'
 
     //shiro
     compile 'org.apache.shiro:shiro-spring-boot-web-starter:1.4.0'
-//    compile 'org.crazycake:shiro-redis:2.8.24'
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     //log4j2
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.1'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.1'
@@ -58,12 +66,17 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.47'
     compile 'org.apache.commons:commons-lang3'
     //lombok的正确依赖方式
-    annotationProcessor 'org.projectlombok:lombok:1.18.2'
-    compileOnly 'org.projectlombok:lombok:1.18.2'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.2'
-    testCompileOnly 'org.projectlombok:lombok:1.18.2'
+    annotationProcessor 'org.projectlombok:lombok:1.18.4'
+    compileOnly 'org.projectlombok:lombok:1.18.4'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
+    testCompileOnly 'org.projectlombok:lombok:1.18.4'
+//    apt 'org.projectlombok:lombok:1.18.4'
+//    provided 'org.projectlombok:lombok:1.18.4'
+
+    providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
 
 }
+//项目依赖
 
 //设置后依赖不用写版本号
 dependencyManagement {

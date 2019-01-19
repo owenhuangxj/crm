@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.dao.TrackMapper">
+    <update id="updateTrackStatus"></update>
+    <!--查询跟踪信息-->
+    <select id="getTrackInfo" resultMap="trackResultMap">
+        select DISTINCT
+        <include refid="trackColumns"/>,
+        a.stu_number,
+        a.consult_id,
+        a.teacher_id
+        from t_track a,t_student b
+        where a.stu_number = b.stu_number
+        and a.stu_number = #{stuNumber}
+        order by a.track_priority DESC
+    </select>
+    <select id="getTrackCount" resultType="java.lang.Integer"></select>
+    <!--添加跟踪信息-->
+    <insert id="insertTrackRecord">
+        insert into t_track
+        (<include refid="trackColumns"/>,stu_number,consult_id,teacher_id,update_time)
+        values
+        (<include refid="trackValues"/>,#{updateTime})
+    </insert>
+
+    <resultMap id="trackResultMap" type="com.ss.entity.Track" autoMapping="true">
+        <association property="stuNumber" column="stu_number" select="com.ss.crm.mapper.StuMapper.getStuInfoByStuNumber">
+        </association>
+        <association property="consultId" column="consult_id" select="com.ss.crm.mapper.UserMapper.getUserNameByUserId">
+        </association>
+        <association property="teacherId" column="teacher_id" select="com.ss.crm.mapper.UserMapper.getUserNameByUserId">
+        </association>
+    </resultMap>
+
+    <sql id="trackColumns">track_ways,track_priority,track_time,track_status,track_next_time,track_duration,track_predict_time,track_turnover_time,track_importance,track_valid,track_details
+    </sql>
+    <sql id="trackValues">#{trackWays},#{trackPriority},#{trackTime},#{trackStatus},#{trackNextTime},#{trackDuration},#{trackPredictTime},#{trackTurnoverTime},#{trackImportance},#{trackValid},#{trackDetails},#{stuNumber.stuNumber},#{consultId.userId},#{teacherId.userId}
+    </sql>
+</mapper>

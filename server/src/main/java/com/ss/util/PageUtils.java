@@ -1,7 +1,8 @@
 package com.ss.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
 public class PageUtils {
     /**
      * 获取分页参数

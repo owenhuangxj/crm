@@ -1,11 +1,11 @@
 package com.ss.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ss.annotation.PermInfo;
 import com.ss.entity.SysRole;
 import com.ss.service.SysRoleService;
 import com.ss.vo.Json;
 import com.ss.vo.Option;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +31,10 @@ public class OptionController {
         String oper = "list role options";
         log.info(oper);
 
-        EntityWrapper<SysRole> params = new EntityWrapper<>();
-        params.setSqlSelect("rid,rname,rval");
+        QueryWrapper<SysRole> params = new QueryWrapper<>();
+        params.select("rid","rname","rval");
 
-        List<SysRole> list = sysRoleService.selectList(params);
+        List<SysRole> list = sysRoleService.list(params);
         List<Option> options = list.stream().map(obj -> new Option(obj.getRid(), obj.getRname(),obj.getRval())).collect(Collectors.toList());
         return Json.succ(oper, "options", options);
     }

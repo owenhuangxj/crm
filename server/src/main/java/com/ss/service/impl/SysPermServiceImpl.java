@@ -1,10 +1,10 @@
 package com.ss.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ss.dao.SysPermMapper;
 import com.ss.entity.SysPerm;
 import com.ss.service.SysPermService;
 import com.ss.vo.AuthVo;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

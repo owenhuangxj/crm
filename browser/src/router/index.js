@@ -19,7 +19,7 @@ import Layout from '../views/layout/Layout'
 *                                if not set alwaysShow, only more than one route under the children
 *                                it will becomes nested mode, otherwise not show the root menu
 * redirect: noredirect           if `redirect:noredirect` will no redirct in the breadcrumb
-* name:'router-name'             the name is used by <keep-alive> (must set!!!)
+* name:'router-name'             the name is used by <keep-alive> (must set!!!) 必须配置name属性
 * meta : {
     roles: ['admin','editor']     will control the page roles (you can set multiple roles)
     title: 'title'               the name show in submenu and breadcrumb (recommend set)
@@ -40,6 +40,7 @@ export const constantRouterMap = [
       path: 'dashboard',
       component: _import('dashboard/index'),
       name: 'dashboard',
+      hidden: true,//左侧导航栏不显示首页
       meta: { title: '首页', icon: 'dashboard', noCache: true }
     }]
   },
@@ -68,7 +69,7 @@ export const asyncRouterMap = [
         path: 'role_manage',
         name: 'role_manage',
         component: _import('_system/role/index'),
-        meta: { perm: 'm:sys:role', title: '角色管理', icon: 'chart', noCache: true },
+        meta: { perm: 'm:sys:role', title: '角色管理', icon: 'chart', noCache: false },
       },
       {
         hidden: true,
@@ -82,7 +83,6 @@ export const asyncRouterMap = [
         name: 'perm_manage',
         component: _import('_system/perm/index'),
         meta: { perm: 'm:sys:perm', title: '权限管理', icon: 'chart', noCache: true }
-
       },
     ]
   },
@@ -107,6 +107,7 @@ export const asyncRouterMap = [
       meta: { perm:'m:performance', title: '业绩管理', icon: 'icon' }
     }]
   },
+
   {
     path: '/student',
     component: Layout,
@@ -118,7 +119,7 @@ export const asyncRouterMap = [
     children: [
       { path: 'trace', component: _import('menu/student/trace'), name: 'trace', meta: { perm:'m:student:trace', title: '学员跟踪', icon: 'chart', noCache: true }},
       { path: 'resume_dispatcher', component: _import('menu/student/resume_dispatcher'), name: '简历分配', meta: { perm:'m:student:resume_dispatcher', title: '简历分配', icon: 'chart', noCache: true }},
-      { path: 'menu3_3', component: _import('menu/student/timer'), name: 'timer', meta: { perm:'m:student:timer', title: '定时任务', icon: 'chart', noCache: true }}
+      { path: 'timer', component: _import('menu/student/timer'), name: 'timer', meta: { perm:'m:student:timer', title: '定时任务', icon: 'chart', noCache: true }}
     ]
   },
 
